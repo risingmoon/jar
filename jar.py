@@ -87,15 +87,23 @@ class Response:
 
 class Application:
 
+    def __init__(self, routes):
+        self.routes = routes
+
     def __call__(self, environ, start_response):
         request = Request(environ)
-        response = Response(b'Test')
+        response = self.routes[environ['PATH_INFO']](request)
         start_response(response.status, list(response.headers))
         return [response.body]
 
 
-app = Application()
+def handler(request):
+    response = Response(b'Test')
+    return response
+
+
 if __name__ == '__main__':
-    httpd = make_server('localhost', 8000, Application())
+    routes = {'/': handler}
+    httpd = make_server('localhost', 8000, Application(routes))
     httpd.serve_forever()
 
