@@ -13,9 +13,10 @@ class Request:
 
 class Response:
 
-    def __init__(self, body=b'', status=200):
+    def __init__(self, body=b'', status_code=200, content_type='text/plain'):
         self.body = body
-        self.status = status
+        self.status_code = status_code
+        self.content_type = content_type
 
 
 class Application:
@@ -26,7 +27,7 @@ class Application:
         response = Response(b'Test')
         status = '200 OK'
         response_headers = [
-            ('Content-Type', 'text/plain'),
+            ('Content-Type', response.content_type),
             ('Content-Length', str(len(response.body)))
         ]
         start_response(status, response_headers)
