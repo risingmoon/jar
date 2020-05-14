@@ -11,20 +11,26 @@ class Request:
                 self.headers[key[len(prefix)].lower()] = value
 
 
+class Response:
+
+    def __init__(self, body=b'', status=200):
+        self.body = body
+        self.status = status
+
+
 class Application:
 
     def __call__(self, environ, start_response):
         request = Request(environ)
 
-        # response_body = 'Request method: %s' % environ['REQUEST_METHOD']
-        response_body = b'Test'
+        response = Response(b'Test')
         status = '200 OK'
         response_headers = [
             ('Content-Type', 'text/plain'),
-            ('Content-Length', str(len(response_body)))
+            ('Content-Length', str(len(response.body)))
         ]
         start_response(status, response_headers)
-        return [response_body]
+        return [response.body]
 
 
 app = Application()
