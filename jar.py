@@ -50,6 +50,9 @@ class Headers(OrderedDict):
         for key in super().__iter__():
             yield key, self[key]
 
+STATUS = {
+    200: 'OK'
+}
 
 class Response:
 
@@ -77,14 +80,17 @@ class Response:
     def content_type(self, value):
         self.headers['Content-Type'] = str(value)
 
+    @property
+    def status(self):
+        return '%s %s' % (self.status_code, STATUS[self.status_code])
+
 
 class Application:
 
     def __call__(self, environ, start_response):
         request = Request(environ)
         response = Response(b'Test')
-        status = '200 OK'
-        start_response(status, list(response.headers))
+        start_response(response.status, list(response.headers))
         return [response.body]
 
 
